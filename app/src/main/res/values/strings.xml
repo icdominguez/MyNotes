@@ -8,4 +8,20 @@
     <string name="title_home">Notas</string>
     <string name="title_favorites">Favoritas</string>
     <string name="title_account">Mi perfil</string>
+
+    <string name="newNoteDialog_title">Nueva nota</string>
+    <string name="newNoteDialog_message">Introduzca los datos de la nueva nota</string>
+    <string name="newNoteDialog_save">Guardar</string>
+    <string name="newNoteDialog_cancel">Cancelar</string>
+
+    <string name="newNoteFragment_title">Título</string>
+    <string name="newNoteFragment_content">Contenido de la nota</string>
+
+    <string name="newNoteFragment_colorRed">Rojo</string>
+    <string name="newNoteFragment_colorGreen">Verde</string>
+    <string name="newNoteFragment_colorBlue">Azul</string>
+    <string name="newNoteFragment_infoColor">Seleccione el color de la nota</string>
+    <string name="newNoteFragment_favorite">Favorita</string>
+    <string name="action_addNote">Nueva nota</string>
+
 </resources>

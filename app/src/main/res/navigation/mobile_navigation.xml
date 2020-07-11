@@ -7,16 +7,16 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.icdominguez.mynotes.NoteFragment"
+        android:name="com.icdominguez.mynotes.ui.NoteFragment"
         tools:layout="@layout/fragment_note_list" />
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.icdominguez.mynotes.NoteFragment"
+        android:name="com.icdominguez.mynotes.ui.NoteFragment"
         tools:layout="@layout/fragment_note_list" />
 
     <fragment
         android:id="@+id/navigation_notifications"
-        android:name="com.icdominguez.mynotes.NoteFragment"
+        android:name="com.icdominguez.mynotes.ui.NoteFragment"
         tools:layout="@layout/fragment_note_list" />
 </navigation>

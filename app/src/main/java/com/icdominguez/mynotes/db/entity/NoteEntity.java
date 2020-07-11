@@ -1,16 +1,32 @@
-package com.icdominguez.mynotes;
+package com.icdominguez.mynotes.db.entity;
 
-public class Note {
-    private String title;
-    private String content;
-    private boolean favorite;
-    private int color;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
-    public Note(String title, String content, boolean favorite, int color) {
+@Entity(tableName = "Notes")
+public class NoteEntity {
+
+    @PrimaryKey(autoGenerate = true)
+    public int id;
+
+    public String title;
+    public String content;
+    public boolean favorite;
+    public String color;
+
+    public NoteEntity(String title, String content, boolean favorite, String color) {
         this.title = title;
         this.content = content;
         this.favorite = favorite;
         this.color = color;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -37,11 +53,11 @@ public class Note {
         this.favorite = favorite;
     }
 
-    public int getColor() {
+    public String getColor() {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(String color) {
         this.color = color;
     }
 }

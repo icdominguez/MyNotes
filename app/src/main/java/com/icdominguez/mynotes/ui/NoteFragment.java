@@ -1,18 +1,28 @@
-package com.icdominguez.mynotes;
+package com.icdominguez.mynotes.ui;
 
 import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.icdominguez.mynotes.viewmodel.NewNoteDialogViewModel;
+import com.icdominguez.mynotes.R;
+import com.icdominguez.mynotes.db.entity.NoteEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,10 +36,11 @@ public class NoteFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 2;
-    private NotesInteractionListener mListener;
 
-    private List<Note> noteList;
+    private List<NoteEntity> noteEntityList;
     private MyNoteRecyclerViewAdapter adapterNotas;
+
+    private NewNoteDialogViewModel noteViewModel;
 
 
 
@@ -57,6 +68,9 @@ public class NoteFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
+
+        // We indicate that the fragment has its own options menu
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -76,32 +90,51 @@ public class NoteFragment extends Fragment {
                 DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
                 float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
                 int numberColumns = (int) dpWidth / 180;
-                
+
                 recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numberColumns, StaggeredGridLayoutManager.VERTICAL));
             }
 
-            noteList = new ArrayList<>();
-            noteList.add(new Note("Lista de la compra", "comprar pan tostado", true, android.R.color.holo_green_light));
-            noteList.add(new Note("Tareas", "Terminar proyecto android y subir todo el código", false, android.R.color.holo_blue_light));
-            noteList.add(new Note("Recordar", "Recordar siempre donde has dejado el coche una vez usado, para no tener que preguntar después", true, android.R.color.holo_green_light));
-            noteList.add(new Note("Lista de la compra", "comprar pan tostado", true, android.R.color.holo_green_light));
-            noteList.add(new Note("Tareas", "Terminar proyecto android y subir todo el código", false, android.R.color.holo_blue_light));
+            noteEntityList = new ArrayList<>();
 
-            adapterNotas = new MyNoteRecyclerViewAdapter(noteList, mListener);
+            adapterNotas = new MyNoteRecyclerViewAdapter(noteEntityList, getActivity());
             recyclerView.setAdapter(adapterNotas);
+
+            launchViewModel();
         }
         return view;
     }
 
-    // first method to be launched when a fragment is instantiated
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
+    private void launchViewModel() {
+        noteViewModel = ViewModelProviders.of(getActivity())
+                .get(NewNoteDialogViewModel.class);
 
-        if(context instanceof NotesInteractionListener) {
-            mListener = (NotesInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString() + " must implement NotesInteractionListener");
+        noteViewModel.getAllNotes().observe(getActivity(), new Observer<List<NoteEntity>>() {
+            @Override
+            public void onChanged(List<NoteEntity> noteEntities) {
+                adapterNotas.setNewNotes(noteEntities);
+            }
+        });
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.option_menu_note_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_add_note:
+                showDialogNewNote();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void showDialogNewNote() {
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        newNoteDialogFragment newNoteDialog = new newNoteDialogFragment();
+        newNoteDialog.show(fm, "NewNowDialogFragment");
     }
 }

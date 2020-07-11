@@ -1,24 +1,35 @@
-package com.icdominguez.mynotes;
+package com.icdominguez.mynotes.ui;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.icdominguez.mynotes.db.entity.NoteEntity;
+import com.icdominguez.mynotes.R;
+import com.icdominguez.mynotes.viewmodel.NewNoteDialogViewModel;
+
 import java.util.List;
 
 public class MyNoteRecyclerViewAdapter extends RecyclerView.Adapter<MyNoteRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Note> mValues;
-    private final NotesInteractionListener mListener;
+    private List<NoteEntity> mValues;
+    private final Context mListener;
+    private NewNoteDialogViewModel viewModel;
 
 
-    public MyNoteRecyclerViewAdapter(List<Note> items, NotesInteractionListener listener) {
+    public MyNoteRecyclerViewAdapter(List<NoteEntity> items, Context ctx) {
         mValues = items;
-        mListener = listener;
+        mListener = ctx;
+        viewModel = ViewModelProviders.of((AppCompatActivity)ctx).get(NewNoteDialogViewModel.class);
     }
 
     @Override
@@ -39,13 +50,15 @@ public class MyNoteRecyclerViewAdapter extends RecyclerView.Adapter<MyNoteRecycl
             holder.ivFavorite.setImageResource(R.drawable.ic_baseline_star_24);
         }
 
-        holder.ivFavorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null != mListener) {
-                    mListener.addFavorite(holder.mItem);
-                }
+        holder.ivFavorite.setOnClickListener(view -> {
+            if(holder.mItem.isFavorite()) {
+                holder.mItem.setFavorite(false);
+                holder.ivFavorite.setImageResource(R.drawable.ic_baseline_star_border_24);
+            } else {
+                holder.mItem.setFavorite(true);
+                holder.ivFavorite.setImageResource(R.drawable.ic_baseline_star_24);
             }
+            viewModel.updateNote(holder.mItem);
         });
 
     }
@@ -55,12 +68,17 @@ public class MyNoteRecyclerViewAdapter extends RecyclerView.Adapter<MyNoteRecycl
         return mValues.size();
     }
 
+    public void setNewNotes(List<NoteEntity> newNotes) {
+        this.mValues = newNotes;
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView tvTitulo;
         public final TextView tvContent;
         public final ImageView ivFavorite;
-        public Note mItem;
+        public NoteEntity mItem;
 
         public ViewHolder(View view) {
             super(view);

@@ -1,8 +1,9 @@
-package com.icdominguez.mynotes;
+package com.icdominguez.mynotes.ui;
 
 import android.os.Bundle;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.icdominguez.mynotes.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -10,7 +11,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class NotesActivity extends AppCompatActivity implements NotesInteractionListener {
+public class DashboardActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,20 +26,5 @@ public class NotesActivity extends AppCompatActivity implements NotesInteraction
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
-    }
-
-    @Override
-    public void editNote(Note note) {
-
-    }
-
-    @Override
-    public void deleteNote(Note note) {
-
-    }
-
-    @Override
-    public void addFavorite(Note note) {
-
     }
 }
